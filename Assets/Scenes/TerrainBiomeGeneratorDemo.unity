@@ -241,9 +241,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 871db6f80c4137c4288ed81523829e87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  width: 500
+  height: 500
   biomes:
-  - {fileID: 11400000, guid: 13965e820f305f14897360e078f7293c, type: 2}
+  - {fileID: 11400000, guid: 9c8cebdfec4eeb34281ff3d7bcb21519, type: 2}
+  - {fileID: 11400000, guid: c9839eb4782f1da47816652579862b7c, type: 2}
   - {fileID: 11400000, guid: ac4c6aefe8dff4b43b8cbed968b970a1, type: 2}
+  - {fileID: 11400000, guid: 13965e820f305f14897360e078f7293c, type: 2}
+  precipitationSeed: 5
+  precipitationScale: 1
+  temperatureSeed: 4
+  temperatureScale: 1
 --- !u!212 &870037646
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -360,7 +368,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 1
+  orthographic size: 4
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

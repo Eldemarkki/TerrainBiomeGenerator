@@ -50,9 +50,7 @@ public class TerrainGenerator : MonoBehaviour
 
                 Biome biome = DetermineBiome(precipitation, temperature);
 
-                float b = (precipitationNoise.GetPerlin(x * precipitationScale, y * precipitationScale) + 1f) / 2f;
-
-                colors[i] = new Color(b,b,b);//biome.colorGradient.Evaluate(biome.GetHeight(x, y));
+                colors[i] = biome.colorGradient.Evaluate(biome.GetHeight(x, y));
                 i++;
             }
         }

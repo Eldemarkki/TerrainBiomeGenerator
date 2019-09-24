@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5ce0741771952e649af96b2b3891f8e4, type: 3}
-  m_Name: New Biome
+  m_Name: Desert
   m_EditorClassIdentifier: 
-  name: 
+  name: Desert
   colorGradient:
     serializedVersion: 2
-    key0: {r: 1, g: 1, b: 1, a: 1}
-    key1: {r: 1, g: 1, b: 1, a: 1}
+    key0: {r: 0.9339623, g: 0.8586973, b: 0.083704144, a: 1}
+    key1: {r: 0.7169812, g: 0.70271575, b: 0.010145942, a: 1}
     key2: {r: 0, g: 0, b: 0, a: 0}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
