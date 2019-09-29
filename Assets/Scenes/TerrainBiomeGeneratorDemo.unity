@@ -246,6 +246,7 @@ MonoBehaviour:
   height: 255
   masterSeed: 0
   masterScale: 1
+  seaLevel: 0.169
   precipitationScale: 1
   precipitationCurve:
     serializedVersion: 2
