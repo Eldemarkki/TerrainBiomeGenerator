@@ -2,16 +2,14 @@ using UnityEngine;
 
 public class OceanBiome : Biome
 {
-    public OceanBiome(int seed, Climate climate) : base(seed, climate)
+    public OceanBiome(int seed) : base(seed)
     {
 
     }
 
-    public override Color GetColor(float height)
+    public override Color GetColor()
     {
-        Color color = Color.Lerp(Color.blue * 0.2f, Color.blue, height);
-        color.a = 1;
-        return color;
+        return Utils.ColorFromRGB255(51, 204, 255);
     }
 
     public override float GetHeight(float x, float y)

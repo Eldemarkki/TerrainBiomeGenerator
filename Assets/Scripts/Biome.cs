@@ -2,35 +2,24 @@ using UnityEngine;
 
 public abstract class Biome
 {
+    public static ForestBiome ForestBiome = new ForestBiome(0);
+    public static DesertBiome DesertBiome = new DesertBiome(0);
+    public static OceanBiome OceanBiome = new OceanBiome(0);
+    public static JungleBiome JungleBiome = new JungleBiome(0);
+    public static TundraBiome TundraBiome = new TundraBiome(0);
+
     public Noise noise;
 
-    public Climate climate;
-
-    public Biome(int seed, Climate climate){
+    public Biome(int seed){
         noise = new Noise(seed, 1, 4, 1);
-        this.climate = climate;
     }
 
     public virtual float GetHeight(float x, float y) {
         return noise.GetValue(x, y);
     }
 
-    public virtual Color GetColor(float height)
+    public virtual Color GetColor()
     {
-        return Color.Lerp(Color.black, Color.white, height);
-    }
-
-    public virtual float GetWeight(float precipitation, float temperature)
-    {
-        Vector2 input = new Vector2(precipitation, temperature);
-        Vector2 target = new Vector2(climate.precipitation, climate.temperature);
-        float dist = Vector2.Distance(input, target);
-
-        float weight = 1f - dist;
-        return weight;
-        
-        // float precipitationSimilarity = Mathf.Min(precipitation, biome.GetTargetPrecipitation()) / Mathf.Max(precipitation, biome.GetTargetPrecipitation());
-        // float temperatureSimilarity = Mathf.Min(temperature, biome.GetTargetTemperature()) / Mathf.Max(temperature, biome.GetTargetTemperature());
-        // return (precipitationSimilarity + temperatureSimilarity) / 2f;
+        return Color.magenta;
     }
 }

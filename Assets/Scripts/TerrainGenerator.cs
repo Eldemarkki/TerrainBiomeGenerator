@@ -9,6 +9,9 @@ public class TerrainGenerator : MonoBehaviour
     [SerializeField] private int masterSeed;
     [SerializeField] private float masterScale;
 
+    [Range(0f, 1f)]
+    [SerializeField] private float seaLevel;
+
     [SerializeField] private float precipitationScale;
     [SerializeField] private AnimationCurve precipitationCurve;
 
@@ -19,12 +22,15 @@ public class TerrainGenerator : MonoBehaviour
 
     [SerializeField] private bool generate;
 
-    [SerializeField] private Biome[] biomes = new Biome[]
+    [SerializeField]
+    private Biome[][] biomeTable = new Biome[][]
     {
-        new ForestBiome(0, new Climate(0.2f, 0.3f)),
-        new DesertBiome(0, new Climate(0f, 1f)),
-        new OceanBiome(0, new Climate(0.05f, 0.2f)),
-        new JungleBiome(0, new Climate(0.8f, 0.9f)),
+        /*                                 Very cold          Cold              Average             Warm               Hot */
+        new Biome[] /* Rainy */          { Biome.TundraBiome, Biome.ForestBiome, Biome.JungleBiome, Biome.JungleBiome, Biome.JungleBiome, },
+        new Biome[] /* Slightly rainy */ { Biome.TundraBiome, Biome.ForestBiome, Biome.ForestBiome, Biome.JungleBiome, Biome.JungleBiome, },
+        new Biome[] /* Average */        { Biome.TundraBiome, Biome.ForestBiome, Biome.ForestBiome, Biome.JungleBiome, Biome.JungleBiome, },
+        new Biome[] /* Slightly dry */   { Biome.TundraBiome, Biome.TundraBiome, Biome.DesertBiome, Biome.DesertBiome, Biome.DesertBiome,  },
+        new Biome[] /* Dry */            { Biome.TundraBiome, Biome.TundraBiome, Biome.DesertBiome, Biome.DesertBiome, Biome.DesertBiome, }
     };
 
     private void Start()
@@ -48,7 +54,7 @@ public class TerrainGenerator : MonoBehaviour
         Noise precipitationNoise = new Noise(masterSeed + 1, precipitationScale, 4, 1);
         Noise temperatureNoise = new Noise(masterSeed + 2, temperatureScale, 4, 1);
 
-        int n = biomes.Length;
+        int n = biomeTable.Length;
 
         var vertices = new Vector3[(width + 1) * (height + 1)];
         var colors = new Color[(width + 1) * (height + 1)];
@@ -63,18 +69,17 @@ public class TerrainGenerator : MonoBehaviour
 
                 float master = (masterNoise.GetValue(x, y) + 1) / 2f;
 
-                float terrainHeight = 0;
-                for (int biomeIndex = 0; biomeIndex < n; biomeIndex++)
+                Biome biome;
+                if (master <= seaLevel)
                 {
-                    if ((biomeIndex - 1f) / n <= master && master <= (biomeIndex + 1f) / n)
-                    {
-                        Biome b = biomes[biomeIndex];
-                        float w = b.GetWeight(precipitation, temperature);
-
-                        float h = (-Mathf.Abs(n * master - biomeIndex) + 1) * b.GetHeight(x, y);
-                        terrainHeight += h;
-                    }
+                    biome = DetermineSea(precipitation, temperature);
                 }
+                else
+                {
+                    biome = DetermineBiome(precipitation, temperature);
+                }
+                
+                float terrainHeight = biome.GetHeight(x, y);
 
                 vertices[i] = new Vector3(x, terrainHeight, y);
 
@@ -82,12 +87,7 @@ public class TerrainGenerator : MonoBehaviour
                 switch (terrainDisplayMode)
                 {
                     case TerrainDisplayMode.Normal:
-                        Biome biome = DetermineBiome(precipitation, temperature);
-                        float weight = biome.GetWeight(precipitation, temperature);
-                        color = biome.GetColor(weight);
-                        break;
-                    case TerrainDisplayMode.Biome:
-                        color = DetermineBiome(precipitation, temperature).GetColor(1);
+                        color = biome.GetColor();
                         break;
                     case TerrainDisplayMode.Precipitation:
                         color = GetMapColor(precipitation);
@@ -132,17 +132,25 @@ public class TerrainGenerator : MonoBehaviour
 
     private Color GetMapColor(float value)
     {
-        if(value < 0.1f) return Color.white * 0.1f;
-        if(value < 0.25f) return Color.Lerp(Color.blue, Color.white, 0.2f);
-        if(value < 0.35f) return Color.Lerp(Color.green, Color.white, 0.2f);
-        if(value < 0.5f) return Color.Lerp(Color.Lerp(Color.red, Color.yellow, 0.55f), Color.white, 0.2f);
-        if(value < 0.75f) return Color.Lerp(Color.red, Color.black, 0.3f);
+        if (value < 0.1f) return Color.white * 0.1f;
+        if (value < 0.25f) return Color.Lerp(Color.blue, Color.white, 0.2f);
+        if (value < 0.35f) return Color.Lerp(Color.green, Color.white, 0.2f);
+        if (value < 0.5f) return Color.Lerp(Color.Lerp(Color.red, Color.yellow, 0.55f), Color.white, 0.2f);
+        if (value < 0.75f) return Color.Lerp(Color.red, Color.black, 0.3f);
         return Color.Lerp(Color.red, Color.black, 0.7f);
     }
 
     Biome DetermineBiome(float precipitation, float temperature)
     {
-        // Get the biome with the highest weight with these parameters
-        return biomes.OrderByDescending(biome => biome.GetWeight(precipitation, temperature)).First();
+        int rowIndex = Mathf.FloorToInt(precipitation * biomeTable.Length);
+        Biome[] row = biomeTable[rowIndex];
+
+        int columnIndex = Mathf.FloorToInt(temperature * row.Length);
+        return row[columnIndex];
+    }
+
+    Biome DetermineSea(float precipitation, float temperature)
+    {
+        return Biome.OceanBiome;
     }
 }

@@ -2,16 +2,14 @@ using UnityEngine;
 
 public class DesertBiome : Biome
 {
-    public DesertBiome(int seed, Climate climate) : base(seed, climate)
+    public DesertBiome(int seed) : base(seed)
     {
 
     }
 
-    public override Color GetColor(float height)
+    public override Color GetColor()
     {
-        Color color = Color.Lerp(Color.yellow * 0.2f, Color.yellow, height);
-        color.a = 1;
-        return color;
+        return Utils.ColorFromRGB255(255, 255, 102);
     }
 
     public override float GetHeight(float x, float y)

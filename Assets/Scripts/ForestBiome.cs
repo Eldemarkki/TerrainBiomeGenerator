@@ -2,16 +2,14 @@ using UnityEngine;
 
 public class ForestBiome : Biome
 {
-    public ForestBiome(int seed, Climate climate) : base(seed, climate)
+    public ForestBiome(int seed) : base(seed)
     {
 
     }
 
-    public override Color GetColor(float height)
+    public override Color GetColor()
     {
-        Color color = Color.Lerp(Color.green * 0.2f, Color.green, height);
-        color.a = 1;
-        return color;
+        return Utils.ColorFromRGB255(0, 204, 0);
     }
 
     public override float GetHeight(float x, float y)
