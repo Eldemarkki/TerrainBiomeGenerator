@@ -3,9 +3,16 @@ using UnityEngine;
 
 public class TerrainGenerator : MonoBehaviour
 {
+    [Header("World Settings")]
+    [SerializeField] private int worldWidth;
+    [SerializeField] private int worldDepth;
+    [SerializeField] private GameObject chunkPrefab;
+
+    [Header("Chunk Settings")]
     [SerializeField] private int width;
     [SerializeField] private int height;
 
+    [Header("Biome Generation Settings")]
     [SerializeField] private int masterSeed;
     [SerializeField] private float masterScale;
 
@@ -18,8 +25,10 @@ public class TerrainGenerator : MonoBehaviour
     [SerializeField] private float temperatureScale;
     [SerializeField] private AnimationCurve temperatureCurve;
 
+    [Header("Rendering Settings")]
     [SerializeField] private TerrainDisplayMode terrainDisplayMode = TerrainDisplayMode.Normal;
 
+    [Header("Generate World")]
     [SerializeField] private bool generate;
 
     [SerializeField]
@@ -29,25 +38,55 @@ public class TerrainGenerator : MonoBehaviour
         new Biome[] /* Rainy */          { Biome.TundraBiome, Biome.ForestBiome, Biome.JungleBiome, Biome.JungleBiome, Biome.JungleBiome, },
         new Biome[] /* Slightly rainy */ { Biome.TundraBiome, Biome.ForestBiome, Biome.ForestBiome, Biome.JungleBiome, Biome.JungleBiome, },
         new Biome[] /* Average */        { Biome.TundraBiome, Biome.ForestBiome, Biome.ForestBiome, Biome.JungleBiome, Biome.JungleBiome, },
-        new Biome[] /* Slightly dry */   { Biome.TundraBiome, Biome.TundraBiome, Biome.DesertBiome, Biome.DesertBiome, Biome.DesertBiome,  },
+        new Biome[] /* Slightly dry */   { Biome.TundraBiome, Biome.TundraBiome, Biome.DesertBiome, Biome.DesertBiome, Biome.DesertBiome, },
         new Biome[] /* Dry */            { Biome.TundraBiome, Biome.TundraBiome, Biome.DesertBiome, Biome.DesertBiome, Biome.DesertBiome, }
     };
 
+    private GameObject[] chunks;
+
+    private void Awake()
+    {
+        chunks = new GameObject[worldWidth * worldDepth];
+    }
+
     private void Start()
     {
-        CreateTerrain(width, height);
+        CreateWorld();
+    }
+
+    private void CreateWorld()
+    {
+        for (int chunkIndex = 0; chunkIndex < chunks.Length; chunkIndex++)
+        {
+            GameObject chunk = chunks[chunkIndex];
+            if (chunk)
+                Destroy(chunk);
+        }
+
+        chunks = new GameObject[worldWidth * worldDepth];
+
+        int i = 0;
+        for (int x = 0; x < worldWidth; x++)
+        {
+            for (int y = 0; y < worldDepth; y++)
+            {
+                GameObject chunk = Instantiate(chunkPrefab, new Vector3(x * width, 0, y * height), Quaternion.identity);
+                chunk.GetComponent<MeshFilter>().sharedMesh = CreateTerrain((int)chunk.transform.position.x, (int)chunk.transform.position.z, width, height);
+                chunks[i++] = chunk;
+            }
+        }
     }
 
     private void Update()
     {
         if (generate)
         {
-            CreateTerrain(width, height);
+            CreateWorld();
             generate = false;
         }
     }
 
-    void CreateTerrain(int width, int height)
+    Mesh CreateTerrain(int xOffset, int yOffset, int width, int height)
     {
         Noise masterNoise = new Noise(masterSeed, masterScale, 4, 1);
 
@@ -64,23 +103,16 @@ public class TerrainGenerator : MonoBehaviour
         {
             for (int x = 0; x <= width; x++)
             {
-                float precipitation = precipitationCurve.Evaluate((precipitationNoise.GetValue(x, y) + 1) / 2f);
-                float temperature = temperatureCurve.Evaluate((temperatureNoise.GetValue(x, y) + 1) / 2f);
+                int worldX = x + xOffset;
+                int worldY = y + yOffset;
 
-                float master = (masterNoise.GetValue(x, y) + 1) / 2f;
+                float precipitation = precipitationCurve.Evaluate((precipitationNoise.GetValue(worldX, worldY) + 1) / 2f);
+                float temperature = temperatureCurve.Evaluate((temperatureNoise.GetValue(worldX, worldY) + 1) / 2f);
+                float master = (masterNoise.GetValue(worldX, worldY) + 1) / 2f;
 
-                Biome biome;
-                if (master <= seaLevel)
-                {
-                    biome = DetermineSea(precipitation, temperature);
-                }
-                else
-                {
-                    biome = DetermineBiome(precipitation, temperature);
-                }
-                
-                float terrainHeight = biome.GetHeight(x, y);
+                Biome biome = DetermineBiome(precipitation, temperature, master);
 
+                float terrainHeight = biome.GetHeight(worldX, worldY);
                 vertices[i] = new Vector3(x, terrainHeight, y);
 
                 Color color;
@@ -127,7 +159,7 @@ public class TerrainGenerator : MonoBehaviour
         mesh.RecalculateNormals();
         mesh.SetColors(colors.ToList());
 
-        GetComponent<MeshFilter>().sharedMesh = mesh;
+        return mesh;
     }
 
     private Color GetMapColor(float value)
@@ -140,12 +172,14 @@ public class TerrainGenerator : MonoBehaviour
         return Color.Lerp(Color.red, Color.black, 0.7f);
     }
 
-    Biome DetermineBiome(float precipitation, float temperature)
+    Biome DetermineBiome(float precipitation, float temperature, float height)
     {
-        int rowIndex = Mathf.FloorToInt(precipitation * biomeTable.Length);
+        if (height <= seaLevel) return DetermineSea(precipitation, temperature);
+
+        int rowIndex = Mathf.FloorToInt(precipitation * (biomeTable.Length - 1));
         Biome[] row = biomeTable[rowIndex];
 
-        int columnIndex = Mathf.FloorToInt(temperature * row.Length);
+        int columnIndex = Mathf.FloorToInt(temperature * (row.Length - 1));
         return row[columnIndex];
     }
 

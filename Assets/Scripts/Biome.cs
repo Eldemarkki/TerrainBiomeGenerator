@@ -2,16 +2,19 @@ using UnityEngine;
 
 public abstract class Biome
 {
-    public static ForestBiome ForestBiome = new ForestBiome(0);
-    public static DesertBiome DesertBiome = new DesertBiome(0);
-    public static OceanBiome OceanBiome = new OceanBiome(0);
-    public static JungleBiome JungleBiome = new JungleBiome(0);
-    public static TundraBiome TundraBiome = new TundraBiome(0);
+    public static ForestBiome ForestBiome = new ForestBiome(1, "Forest");
+    public static DesertBiome DesertBiome = new DesertBiome(2, "Desert");
+    public static OceanBiome OceanBiome = new OceanBiome(3, "Ocean");
+    public static JungleBiome JungleBiome = new JungleBiome(4, "Jungle");
+    public static TundraBiome TundraBiome = new TundraBiome(5, "Tundra");
 
     public Noise noise;
 
-    public Biome(int seed){
-        noise = new Noise(seed, 1, 4, 1);
+    public string name;
+
+    public Biome(int seed, string name){
+        noise = new Noise(seed, 1, 4, 15);
+        this.name = name;
     }
 
     public virtual float GetHeight(float x, float y) {

@@ -242,11 +242,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 871db6f80c4137c4288ed81523829e87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  worldWidth: 2
+  worldDepth: 2
+  chunkPrefab: {fileID: 1574573080580675107, guid: 6f73f786c397df2489c7898481419e11,
+    type: 3}
   width: 255
   height: 255
   masterSeed: 0
   masterScale: 1
-  seaLevel: 0.169
+  seaLevel: 0.4
+  blending: 2
   precipitationScale: 1
   precipitationCurve:
     serializedVersion: 2

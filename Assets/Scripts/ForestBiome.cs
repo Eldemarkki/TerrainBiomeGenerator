@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ForestBiome : Biome
 {
-    public ForestBiome(int seed) : base(seed)
+    public ForestBiome(int seed, string name) : base(seed, name)
     {
 
     }

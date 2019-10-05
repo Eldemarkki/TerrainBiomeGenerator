@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class OceanBiome : Biome
 {
-    public OceanBiome(int seed) : base(seed)
+    public OceanBiome(int seed, string name) : base(seed, name)
     {
 
     }
@@ -14,6 +14,6 @@ public class OceanBiome : Biome
 
     public override float GetHeight(float x, float y)
     {
-        return 0;
+        return -5;
     }
 }
