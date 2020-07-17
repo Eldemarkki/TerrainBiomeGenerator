@@ -1,8 +1,9 @@
+using Unity.Mathematics;
 using UnityEngine;
 
 public class TundraBiome : Biome
 {
-    public TundraBiome(int seed, string name) : base(seed, name)
+    public TundraBiome(string name, int seed, float scale, float2 offset, float baseHeight) : base(name, seed, scale, offset, baseHeight)
     {
 
     }
@@ -14,6 +15,6 @@ public class TundraBiome : Biome
 
     public override float GetHeight(float x, float y)
     {
-        return 5;
+        return noise.GetValue(x, y);
     }
 }

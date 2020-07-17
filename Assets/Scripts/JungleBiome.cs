@@ -1,8 +1,9 @@
+using Unity.Mathematics;
 using UnityEngine;
 
 public class JungleBiome : Biome
 {
-    public JungleBiome(int seed, string name) : base(seed, name)
+    public JungleBiome(string name, int seed, float scale, float2 offset, float baseHeight) : base(name, seed, scale, offset, baseHeight)
     {
 
     }
@@ -14,6 +15,6 @@ public class JungleBiome : Biome
 
     public override float GetHeight(float x, float y)
     {
-        return 10;
+        return noise.GetValue(x, y);
     }
 }
