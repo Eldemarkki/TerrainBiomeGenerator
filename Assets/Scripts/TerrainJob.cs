@@ -113,7 +113,7 @@ public struct TerrainJob : IJobParallelFor
         return Color.Lerp(Color.red, Color.black, 0.7f);
     }
 
-    Biome DetermineBiome(float precipitation, float temperature, float elevation, float seaLevel)
+    private Biome DetermineBiome(float precipitation, float temperature, float elevation, float seaLevel)
     {
         if (elevation <= seaLevel) { return DetermineSea(); }
 
