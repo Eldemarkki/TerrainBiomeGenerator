@@ -12,9 +12,4 @@ public class DesertBiome : Biome
     {
         return Utils.ColorFromRGB255(255, 255, 102);
     }
-
-    public override float GetHeight(float x, float y)
-    {
-        return noise.GetValue(x, y)+10;
-    }
 }

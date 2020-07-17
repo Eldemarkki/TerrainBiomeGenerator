@@ -12,9 +12,4 @@ public class TundraBiome : Biome
     {
         return Utils.ColorFromRGB255(102, 153, 153);
     }
-
-    public override float GetHeight(float x, float y)
-    {
-        return noise.GetValue(x, y);
-    }
 }

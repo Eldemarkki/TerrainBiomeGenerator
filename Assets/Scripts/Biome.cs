@@ -11,15 +11,15 @@ public abstract class Biome
 
     public static Biome[][] BiomeTable = new Biome[][]
     {
-        /*                                 Very cold          Cold              Average             Warm               Hot */
-        new Biome[] /* Rainy */          { Biome.TundraBiome, Biome.ForestBiome, Biome.JungleBiome, Biome.JungleBiome, Biome.JungleBiome, },
-        new Biome[] /* Slightly rainy */ { Biome.TundraBiome, Biome.ForestBiome, Biome.ForestBiome, Biome.JungleBiome, Biome.JungleBiome, },
-        new Biome[] /* Average */        { Biome.TundraBiome, Biome.ForestBiome, Biome.ForestBiome, Biome.JungleBiome, Biome.JungleBiome, },
-        new Biome[] /* Slightly dry */   { Biome.TundraBiome, Biome.TundraBiome, Biome.DesertBiome, Biome.DesertBiome, Biome.DesertBiome, },
-        new Biome[] /* Dry */            { Biome.TundraBiome, Biome.TundraBiome, Biome.DesertBiome, Biome.DesertBiome, Biome.DesertBiome, }
+        /*                                 Very cold    Cold         Average      Warm         Hot */
+        new Biome[] /* Rainy */          { TundraBiome, ForestBiome, JungleBiome, JungleBiome, JungleBiome, },
+        new Biome[] /* Slightly rainy */ { TundraBiome, ForestBiome, ForestBiome, JungleBiome, JungleBiome, },
+        new Biome[] /* Average */        { TundraBiome, ForestBiome, ForestBiome, JungleBiome, JungleBiome, },
+        new Biome[] /* Slightly dry */   { TundraBiome, TundraBiome, DesertBiome, DesertBiome, DesertBiome, },
+        new Biome[] /* Dry */            { TundraBiome, TundraBiome, DesertBiome, DesertBiome, DesertBiome, }
     };
 
-    public static Biome[] AllBiomes = { Biome.ForestBiome, Biome.DesertBiome, Biome.OceanBiome, Biome.JungleBiome, Biome.TundraBiome };
+    public static Biome[] AllBiomes = { ForestBiome, DesertBiome, OceanBiome, JungleBiome, TundraBiome };
 
     public Noise noise;
 
@@ -30,18 +30,20 @@ public abstract class Biome
     public float baseHeight;
     public float2 offset;
 
-    public Biome(string name, int seed, float scale, float2 offset, float baseHeight){
+    protected Biome(string name, int seed, float scale, float2 offset, float baseHeight)
+    {
         this.scale = scale;
         this.offset = offset;
         this.baseHeight = baseHeight;
         this.seed = seed;
         this.name = name;
 
-        noise = new Noise(seed, scale, 4, 15);
+        noise = new Noise(seed, scale, 4, 6);
     }
 
-    public virtual float GetHeight(float x, float y) {
-        return noise.GetValue(x, y);
+    public virtual float GetHeight(float x, float y)
+    {
+        return noise.GetValue(x, y) + baseHeight;
     }
 
     public virtual Color GetColor()

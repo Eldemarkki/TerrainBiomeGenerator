@@ -12,9 +12,4 @@ public class ForestBiome : Biome
     {
         return Utils.ColorFromRGB255(0, 204, 0);
     }
-
-    public override float GetHeight(float x, float y)
-    {
-        return noise.GetValue(x, y);
-    }
 }

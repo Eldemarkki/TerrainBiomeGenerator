@@ -33,7 +33,7 @@ public class Chunk : MonoBehaviour
             triangles = new int[width * height * 6];
             for (int t = 0, v = 0, y = 0; y < height; y++, v++)
             {
-                for (int x = 0; x < width; x++, t = t + 6, v++)
+                for (int x = 0; x < width; x++, t += 6, v++)
                 {
                     triangles[t] = v;
                     triangles[t + 3] = triangles[t + 2] = v + 1;

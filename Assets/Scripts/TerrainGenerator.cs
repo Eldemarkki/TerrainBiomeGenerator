@@ -15,7 +15,7 @@ public class TerrainGenerator : MonoBehaviour
     [SerializeField] private int masterSeed;
     [SerializeField] private float masterScale;
 
-    [Range(0, 256)]
+    [Range(0, 10)]
     [SerializeField] private int blending = 4;
 
     [Range(0f, 1f)]
@@ -49,7 +49,9 @@ public class TerrainGenerator : MonoBehaviour
         {
             Chunk chunk = chunks[chunkIndex];
             if (chunk)
+            {
                 Destroy(chunk.gameObject);
+            }
         }
 
         chunks = new Chunk[worldWidth * worldDepth];

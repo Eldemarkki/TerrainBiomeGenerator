@@ -15,6 +15,6 @@ public class OceanBiome : Biome
 
     public override float GetHeight(float x, float y)
     {
-        return baseHeight+100;
+        return baseHeight;
     }
 }
