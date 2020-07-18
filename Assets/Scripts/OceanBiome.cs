@@ -10,7 +10,7 @@ public class OceanBiome : Biome
 
     public override Color GetColor()
     {
-        return Utils.ColorFromRGB255(51, 204, 255);
+        return new Color32(51, 204, 255, 255);
     }
 
     public override float GetHeight(float x, float y)

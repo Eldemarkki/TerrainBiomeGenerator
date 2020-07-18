@@ -10,6 +10,6 @@ public class ForestBiome : Biome
 
     public override Color GetColor()
     {
-        return Utils.ColorFromRGB255(0, 204, 0);
+        return new Color32(0, 204, 0, 255);
     }
 }

@@ -10,6 +10,6 @@ public class JungleBiome : Biome
 
     public override Color GetColor()
     {
-        return Utils.ColorFromRGB255(0, 144, 33);
+        return new Color32(0, 144, 33, 255);
     }
 }

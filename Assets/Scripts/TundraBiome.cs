@@ -10,6 +10,6 @@ public class TundraBiome : Biome
 
     public override Color GetColor()
     {
-        return Utils.ColorFromRGB255(102, 153, 153);
+        return new Color32(102, 153, 153, 255);
     }
 }

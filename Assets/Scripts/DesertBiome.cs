@@ -10,6 +10,6 @@ public class DesertBiome : Biome
 
     public override Color GetColor()
     {
-        return Utils.ColorFromRGB255(255, 255, 102);
+        return new Color32(255, 255, 102, 255);
     }
 }
